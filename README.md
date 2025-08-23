@@ -30,15 +30,6 @@ It provides real-time chat, dynamic prompts, markdown rendering, and supports mu
 
 ## ✨ Features
 
-- 🔌 Switch between **Ollama**, **OpenAI**, and **GitHub AI**
-- ⚡ Local inference with **LLaMA 3.2**, **Phi3**, **Gemma**, etc.
-- 📄 Dynamic Blade-based instructions & prompts
-- 💬 Markdown-rendered AI answers
-- ✍️ Typewriter effect for replies
-- 🧠 Model selection UI
-- 🔒 Session-based conversations
-- 🌍 Multi-language instructions (optional)
-- 🎙️ (Optional) Speech-to-text & text-to-speech integration
 
 ---
 
