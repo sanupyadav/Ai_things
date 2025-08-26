@@ -1,7 +1,9 @@
 <?php
 
-use App\Http\Controllers\ChatController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\AudioController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,8 +19,11 @@ Route::middleware([
     })->name('dashboard');
 
     Route::post('/chat/clear', [ChatController::class, 'clearHistoryFromAgent'])->name('chat.clear');
-
+    
     Route::get('/chat', [ChatController::class, 'index'])->name('chat');
+    
     Route::post('/chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+    
+    Route::post('/audio/upload', [AudioController::class, 'upload']);
 
-});
+});         
