@@ -14,7 +14,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # - name: Run Laravel migrations & seed
+
+      # name: Run Laravel migrations & seed
         # env:
         #   DB_CONNECTION: mysql
         #   DB_HOST: 127.0.0.1
@@ -50,7 +51,6 @@ jobs:
             **/.git*
             **/.DS_Store
             **/node_modules/**
-            **/vendor/**
             # **/storage/framework/cache/**
             # **/storage/framework/views/**
           dangerous-clean-slate: false
