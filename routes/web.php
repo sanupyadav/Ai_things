@@ -20,7 +20,7 @@ Route::middleware([
 
     Route::post('/chat/clear', [ChatController::class, 'clearHistoryFromAgent'])->name('chat.clear');
     
-    Route::get('/chat', [ChatController::class, 'index'])->name('chat');
+    Route::get('/agent', [ChatController::class, 'index'])->name('chat');
     
     Route::post('/chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
     
