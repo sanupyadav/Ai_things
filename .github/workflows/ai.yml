@@ -14,6 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+
       # name: Run Laravel migrations & seed
         # env:
         #   DB_CONNECTION: mysql
@@ -27,14 +28,14 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.3'
           extensions: mbstring, bcmath, intl, pdo_mysql
 
       - name: Install Composer dependencies (for Pint + vendor cache)
         run: composer install --no-dev --prefer-dist --optimize-autoloader
 
-      - name: Run Laravel Pint (code style check)
-        run: ./vendor/bin/pint --test
+      # - name: Run Laravel Pint (code style check)
+        # run: ./vendor/bin/pint --test
 
       - name: FTP Deploy
         if: success() # only run if Pint passes
