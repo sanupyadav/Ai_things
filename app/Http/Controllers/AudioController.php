@@ -3,36 +3,56 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Services\AudioService;
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class AudioController extends Controller
 {
-    public function upload(Request $request, AudioService $audioService)
+    public function index()
     {
-        ini_set('memory_limit', '512M');
-        set_time_limit(300);
-
-        // Validate file
-        try {
-      
-        $request->validate([
-            'audio' => 'required|mimes:mp3,wav,ogg|max:20480', // max 20MB
-        ]);
-
-        // Store file in public disk (audio/original folder)
-        $storedPath = $request->file('audio')->store('audio/original', 'public');
-
-        // Preprocess audio
-        $processedPath = $audioService->preprocess(storage_path('app/public/' . $storedPath), $request->input('format', 'mp3'));
-
-        return response()->json([
-            'original'  => asset('storage/' . $storedPath),
-            'processed' => asset('storage/processed_audio/' . basename($processedPath)),
-        ]);
-            
-        } catch (\Throwable $th) {
-          return response()->json(["status" => "error", "message" => $th->getMessage()]);
-        }
+        return view('audio-processor');
     }
+
+    // public function upload(Request $request)
+    // {
+    //     try {
+    //         // validate request
+    //         $request->validate([
+    //             'audio'  => 'required|file|mimes:mp3,wav,ogg,flac', // 20MB
+    //             'format' => 'required|string|in:mp3,wav,flac',
+    //         ]);
+
+    //         // store original file
+    //         $path = $request->file('audio')->store('audios/original', 'public');
+    //         $originalUrl = Storage::url($path);
+
+    //         // fake processing (just copy file)
+    //         $processedPath = str_replace('original', 'processed', $path);
+    //         Storage::disk('public')->copy($path, $processedPath);
+    //         $processedUrl = Storage::url($processedPath);
+
+    //         return response()->json([
+    //             'status'   => 'success',
+    //             'message'  => 'Audio uploaded and processed successfully!',
+    //             'format'   => $request->format,
+    //             'original' => $originalUrl,
+    //             'processed'=> $processedUrl,
+    //         ]);
+
+    //     } catch (\Illuminate\Validation\ValidationException $e) {
+    //         // Validation error
+    //         return response()->json([
+    //             'status'  => 'error',
+    //             'message' => $e->errors(), // returns array of errors
+    //         ], 422);
+    //     } catch (\Exception $e) {
+    //         // Unexpected error
+    //         Log::error("Audio upload failed: " . $e->getMessage());
+
+    //         return response()->json([
+    //             'status'  => 'error',
+    //             'message' => $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
 }
