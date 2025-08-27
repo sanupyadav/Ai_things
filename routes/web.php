@@ -18,12 +18,17 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 
-    Route::post('/chat/clear', [ChatController::class, 'clearHistoryFromAgent'])->name('chat.clear');
+    Route::post('/agent/clear', [ChatController::class, 'clearHistoryFromAgent'])->name('chat.clear');
     
     Route::get('/agent', [ChatController::class, 'index'])->name('chat');
     
-    Route::post('/chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+    Route::post('/agent/send', [ChatController::class, 'sendMessage'])->name('chat.send');
     
-    Route::post('/audio/upload', [AudioController::class, 'upload']);
+    
+    Route::get('audio-processor', [AudioController::class, 'index'])->name('audio.processor');
+
+//      Route::get('/audio-processor', function () {
+//        return view('audio-processor');
+//    });
 
 });         

@@ -1,7 +1,7 @@
 <x-app-layout>
   <x-slot name="header">
       <h2 class="font-semibold text-x dark:text-gray-200 leading-tight">
-          {{ __('Chat') }}
+          {{ __('Audio') }}
       </h2>
   </x-slot>
   <head>
@@ -11,44 +11,63 @@
       <title>Chat</title>
       <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
   </head>
-  <body class="bg-gray-900 dark:bg-gray-900 min-h-screen flex items-center justify-center p-4">
-      <div class="flex flex-col gap-4 max-w-4xl w-full bg-gray-800 rounded-xl shadow-lg p-6" style="margin: auto; margin-top: 80px;">
+  <body class="bg-gray-800 min-h-screen flex items-center justify-center p-4">
+      <div class="flex flex-col gap-4 max-w-4xl w-full bg-gray-700 rounded-xl shadow-lg p-6" style="margin: auto; margin-top: 80px;">
           <!-- Chat messages -->
-          <div id="chatWindow" class="overflow-y-auto p-4 bg-gray-900 rounded-lg flex flex-col gap-3 border border-gray-700" style="height: 400px;">
-              @foreach($chatHistory as $msg)
+          <div id="chatWindow" class="overflow-y-auto p-4 bg-gray-900 rounded-lg flex flex-col gap-3 border border-gray-600" style="height: 400px;">
+              {{-- @foreach($chatHistory as $msg)
                   @if(in_array($msg['sender'], ['user', 'assistant']))
                       <div class="flex justify-{{ $msg['sender'] === 'user' ? 'end' : 'start' }} items-start gap-2">
-                          <div class="px-4 py-2 rounded-lg max-w-[80%] break-words border border-gray-600 transition-all duration-200 hover:shadow-md {{ $msg['sender'] === 'user' ? 'bg-blue-700 text-white' : 'bg-gray-700 text-gray-200' }}">
+                          <div class="px-4 py-2 rounded-lg max-w-[80%] break-words border border-gray-600 transition-all duration-200 hover:shadow-md {{ $msg['sender'] === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-200' }}">
                               <pre class="whitespace-pre-wrap font-mono text-sm">{!! nl2br(e($msg['text'])) !!}</pre>
                           </div>
                       </div>
                   @endif
-              @endforeach
+              @endforeach --}}
           </div>
 
           <!-- Typing indicator -->
           <div id="typingIndicator" class="hidden flex justify-start items-center">
-              <div class="px-4 py-2 rounded-lg max-w-xs break-words bg-gray-700 text-gray-300 border italic">
+              <div class="px-4 py-2 rounded-lg max-w-xs break-words bg-gray-700 text-gray-300 border border-gray-600 italic">
                   Agent is typing...
+              </div>
+          </div>
+
+          <!-- Audio File Upload Area -->
+          <div id="fileUploadArea" class="hidden p-3 bg-gray-600 rounded-lg border border-gray-500">
+              <input type="file" id="fileInput" class="hidden" accept=".mp3,.wav,.ogg,.flac,.m4a,.aac">
+              <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                      <span class="text-gray-300">🎵</span>
+                      <span id="fileName" class="text-gray-200 text-sm"></span>
+                  </div>
+                  <button id="removeFile" class="text-red-400 hover:text-red-300 text-sm">✕</button>
               </div>
           </div>
 
           <!-- Input + Clear Button -->
           <form id="chatForm" class="flex gap-2 items-center">
               @csrf
+              <button
+                  type="button"
+                  id="fileBtn"
+                  class="bg-gray-600 text-gray-300 px-3 py-2 rounded-full hover:bg-gray-500 focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all duration-200"
+                  title="Upload audio file"
+              >
+                  🎵
+              </button>
               <input
                   type="text"
                   name="message"
                   id="messageInput"
-                  class="flex-1 border rounded-full px-4 py-2 focus:ring-2 focus:ring-blue-500 bg-gray-700 text-gray-100 border-gray-600 placeholder-gray-400 focus:outline-none transition-all duration-200"
+                  class="flex-1 border rounded-full px-4 py-2 focus:ring-2 focus:ring-blue-500 bg-gray-600 text-gray-100 border-gray-500 placeholder-gray-400 focus:outline-none transition-all duration-200"
                   placeholder="Ask me anything..."
-                  required
-                  maxlength="255"
+                  maxlength="500"
               />
               <button
                   type="submit"
                   id="sendBtn"
-                  class="bg-blue-700 text-white px-4 py-2 rounded-full hover:bg-blue-800 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-200 flex items-center gap-2"
+                  class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all duration-200 flex items-center gap-2"
               >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
@@ -57,7 +76,7 @@
               <button
                   type="button"
                   id="clearHistoryBtn"
-                  class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 focus:ring-2 focus:ring-red-500 transition-all duration-200"
+                  class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 focus:ring-2 focus:ring-red-400 transition-all duration-200"
               >
                   Clear
               </button>
@@ -75,6 +94,37 @@
           const sendBtn = document.getElementById("sendBtn");
           const messageInput = document.getElementById("messageInput");
           const chatForm = document.getElementById("chatForm");
+          const fileBtn = document.getElementById("fileBtn");
+          const fileInput = document.getElementById("fileInput");
+          const fileUploadArea = document.getElementById("fileUploadArea");
+          const fileName = document.getElementById("fileName");
+          const removeFile = document.getElementById("removeFile");
+
+          let uploadedFile = null;
+
+          // Audio file upload handling
+          fileBtn.addEventListener('click', () => {
+              fileInput.click();
+          });
+
+          fileInput.addEventListener('change', function(e) {
+              const file = e.target.files[0];
+              if (file) {
+                  uploadedFile = file;
+                  fileName.textContent = file.name;
+                  fileUploadArea.classList.remove('hidden');
+                  fileBtn.classList.add('bg-blue-600', 'text-white');
+                  fileBtn.classList.remove('bg-gray-600', 'text-gray-300');
+              }
+          });
+
+          removeFile.addEventListener('click', function() {
+              uploadedFile = null;
+              fileInput.value = '';
+              fileUploadArea.classList.add('hidden');
+              fileBtn.classList.remove('bg-blue-600', 'text-white');
+              fileBtn.classList.add('bg-gray-600', 'text-gray-300');
+          });
 
           // Typewriter effect
           function typeMessage(container, text, speed = 5) {
@@ -90,16 +140,23 @@
           chatForm.addEventListener("submit", async (event) => {
               event.preventDefault();
               const message = messageInput.value.trim();
-              if (!message) return;
+              if (!message && !uploadedFile) return;
 
               // Disable input and button
               messageInput.disabled = true;
               sendBtn.disabled = true;
+              fileBtn.disabled = true;
+
+              // Create message content
+              let userMessageContent = message;
+              if (uploadedFile) {
+                  userMessageContent += (message ? '\n' : '') + `🎵 ${uploadedFile.name}`;
+              }
 
               // Append user message
               const userDiv = document.createElement("div");
               userDiv.className = "flex justify-end items-start gap-2";
-              userDiv.innerHTML = `<div class="px-4 py-2 rounded-lg max-w-[80%] break-words bg-blue-700 text-white border border-gray-600"><pre class="whitespace-pre-wrap font-mono text-sm">${message}</pre></div>`;
+              userDiv.innerHTML = `<div class="px-4 py-2 rounded-lg max-w-[80%] break-words bg-blue-600 text-white border border-gray-600"><pre class="whitespace-pre-wrap font-mono text-sm">${userMessageContent}</pre></div>`;
               chatWindow.appendChild(userDiv);
               chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: "smooth" });
 
@@ -111,13 +168,19 @@
               chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: "smooth" });
 
               try {
+                  // Create FormData for file upload
+                  const formData = new FormData();
+                  formData.append('message', message);
+                  if (uploadedFile) {
+                      formData.append('file', uploadedFile);
+                  }
+
                   const response = await fetch("{{ route('chat.send') }}", {
                       method: "POST",
                       headers: {
-                          "Content-Type": "application/json",
                           "X-CSRF-TOKEN": csrfToken,
                       },
-                      body: JSON.stringify({ message }),
+                      body: formData
                   });
 
                   if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
@@ -136,10 +199,19 @@
                       botDiv.appendChild(botMessage);
                       chatWindow.appendChild(botDiv);
 
-                      const lastMsg = data.chatHistory?.[data.chatHistory.length - 1]?.text || "No response received.";
+                      const lastMsg = data.response || data.chatHistory?.[data.chatHistory.length - 1]?.text || "No response received.";
                       typeMessage(pre, lastMsg, 40);
 
                       chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: "smooth" });
+
+                      // Clear uploaded file after successful send
+                      if (uploadedFile) {
+                          uploadedFile = null;
+                          fileInput.value = '';
+                          fileUploadArea.classList.add('hidden');
+                          fileBtn.classList.remove('bg-blue-600', 'text-white');
+                          fileBtn.classList.add('bg-gray-600', 'text-gray-300');
+                      }
                   } else {
                       throw new Error(data.error || "Server returned unsuccessful response.");
                   }
@@ -155,6 +227,7 @@
                   // Re-enable input and button
                   messageInput.disabled = false;
                   sendBtn.disabled = false;
+                  fileBtn.disabled = false;
                   messageInput.focus();
               }
           });
