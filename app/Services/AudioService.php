@@ -48,9 +48,12 @@ class AudioService
         $audio->filters()->custom('afftdn=nf=-25');
 
         // Choose output format
-        if ($format === 'mp3') {
+       if ($format === 'mp3') {
             $audioFormat = new Mp3();
             $audioFormat->setAudioCodec('libmp3lame');
+        } elseif ($format === 'flac') {
+            $audioFormat = new Flac();
+            $audioFormat->setAudioCodec('flac');
         } else {
             $audioFormat = new Wav();
             $audioFormat->setAudioCodec('pcm_s16le');
