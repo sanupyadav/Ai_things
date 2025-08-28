@@ -2,13 +2,10 @@
 
 namespace App\AiAgents;
 
-use App\Services;
-use LarAgent\Agent;
-use App\Models\User;
-use Illuminate\View\View;
 use App\Models\Transaction;
+use App\Models\User;
+use LarAgent\Agent;
 use LarAgent\Attributes\Tool;
-use App\Services\DBQueryService;
 
 class OrgChatAgent extends Agent
 {
@@ -121,14 +118,13 @@ class OrgChatAgent extends Agent
     //     ];
     // }
 
-    #[Tool('Get any data from DB safely', ['query'=>'user ask question', '$currentUserId' => 'login users id'])]
+    #[Tool('Get any data from DB safely', ['query' => 'user ask question', '$currentUserId' => 'login users id'])]
     public function getAnyDataFromDB(string $query, int $currentUserId)
     {
 
-        $service = new \App\Services\DBQueryService();
+        $service = new \App\Services\DBQueryService;
+
         return $service->handleQuery($query, $currentUserId);
 
-
     }
-    
 }

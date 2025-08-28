@@ -42,7 +42,7 @@ class DBQueryService
         $allowedTables = $this->allowedTables;
         // $prompt = $this->generateInstructions($query, $currentUserId);
         $agent = SmartAgent::forUser(auth()->user());
-        
+
         $agent->setContext($query, $currentUserId, $this->schema, $allowedTables);
         $response = $agent->respond($query);
         $action = json_decode($response, true);
@@ -55,22 +55,22 @@ class DBQueryService
         return $action;
     }
 
-   public function getSchema(): array
-{
-    $schema = [];
+    public function getSchema(): array
+    {
+        $schema = [];
 
-    // Get all tables in the current database
-    $tables = DB::select('SHOW TABLES');
-    $dbName = env('DB_DATABASE');
+        // Get all tables in the current database
+        $tables = DB::select('SHOW TABLES');
+        $dbName = env('DB_DATABASE');
 
-    foreach ($tables as $tableObj) {
-        $tableName = $tableObj->{"Tables_in_$dbName"}; // dynamic property
-        $columns = Schema::getColumnListing($tableName);
-        $schema[$tableName] = $columns;
+        foreach ($tables as $tableObj) {
+            $tableName = $tableObj->{"Tables_in_$dbName"}; // dynamic property
+            $columns = Schema::getColumnListing($tableName);
+            $schema[$tableName] = $columns;
+        }
+
+        return $schema;
     }
-
-    return $schema;
-}
 
     /**
      * Fallback parsing if AI failssh
