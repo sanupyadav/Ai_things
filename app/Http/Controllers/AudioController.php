@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Services\AudioService;
+use App\AiAgents\SpeechToTextAgent;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 
 class AudioController extends Controller
@@ -13,41 +16,56 @@ class AudioController extends Controller
         return view('audio-processor');
     }
 
-    // public function upload(Request $request)
+
+    public function speechToText(Request $request)
+{
+   ini_set('max_execution_time', 300);
+    // validate request
+    $request->validate([
+        'audio' => 'required|file|mimes:mp3,wav,ogg,flac|max:50480', // 20MB
+    ]);
+
+    // convert file to base64
+    $audioFile = $request->file('audio');
+
+    $res = new AudioService();
+    $res = $res->transcribeAudio($audioFile->getRealPath());
+   // dd($res);
+    // send to a
+    return $res;
+}
+
+    
+    // public function speechToText(Request $request)
     // {
     //     try {
-    //         // validate request
+    //         // Validate request
     //         $request->validate([
-    //             'audio'  => 'required|file|mimes:mp3,wav,ogg,flac', // 20MB
-    //             'format' => 'required|string|in:mp3,wav,flac',
+    //             'audio' => 'required|file|mimes:mp3,wav,ogg,flac|max:50480',
     //         ]);
 
-    //         // store original file
-    //         $path = $request->file('audio')->store('audios/original', 'public');
-    //         $originalUrl = Storage::url($path);
+    //         // Store uploaded file
+    //         $path = $request->file('audio')->store('audios/uploads', 'public');
+    //         $audioPath = Storage::disk('public')->path($path);
 
-    //         // fake processing (just copy file)
-    //         $processedPath = str_replace('original', 'processed', $path);
-    //         Storage::disk('public')->copy($path, $processedPath);
-    //         $processedUrl = Storage::url($processedPath);
+    //         // Send audio to Agent
+    //         $res = SpeechToTextAgent::for(auth()->id())
+    //             ->withAudios($audioPath)
+    //             ->respond("Please transcribe this audio into text.");
 
     //         return response()->json([
-    //             'status'   => 'success',
-    //             'message'  => 'Audio uploaded and processed successfully!',
-    //             'format'   => $request->format,
-    //             'original' => $originalUrl,
-    //             'processed'=> $processedUrl,
+    //             'status' => 'success',
+    //             'text'   => $res->output(), // depends on LarAgent response format
     //         ]);
 
     //     } catch (\Illuminate\Validation\ValidationException $e) {
-    //         // Validation error
     //         return response()->json([
     //             'status'  => 'error',
-    //             'message' => $e->errors(), // returns array of errors
+    //             'message' => $e->errors(),
     //         ], 422);
+
     //     } catch (\Exception $e) {
-    //         // Unexpected error
-    //         Log::error("Audio upload failed: " . $e->getMessage());
+    //         Log::error("Speech-to-text failed: " . $e->getMessage());
 
     //         return response()->json([
     //             'status'  => 'error',

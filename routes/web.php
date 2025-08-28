@@ -24,7 +24,7 @@ Route::middleware([
     
     Route::post('/agent/send', [ChatController::class, 'sendMessage'])->name('chat.send');
     
-    
+     Route::post('/speech-to-text', [AudioController::class, 'speechToText'])->name('audio.speechToText');
     Route::get('audio-processor', [AudioController::class, 'index'])->name('audio.processor');
 
 //      Route::get('/audio-processor', function () {
