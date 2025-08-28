@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\AiAgents\OrgChatAgent;
 use App\AiAgents\SmartAgent;
 use Illuminate\Http\Request;
-use App\AiAgents\OrgChatAgent;
 
 class ChatController extends Controller
 {
@@ -129,7 +129,7 @@ class ChatController extends Controller
         $this->chatHistory = [];
         session()->forget('chatHistory');
         SmartAgent::forUser(auth()->user())->clear();
-        
+
         return response()->json([
             'success' => true,
             'message' => 'Chat history cleared successfully',

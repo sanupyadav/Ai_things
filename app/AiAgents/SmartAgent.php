@@ -17,7 +17,9 @@ class SmartAgent extends Agent
     protected $query;
 
     protected $currentUserId;
+
     protected $allowedTables;
+
     protected $schema;
 
     public function setContext(string $query, int $currentUserId, $schema, $allowedTables)
