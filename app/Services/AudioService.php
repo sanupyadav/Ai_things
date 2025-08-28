@@ -17,7 +17,7 @@ class AudioService
 
     public function transcribe(string $filePath): ?string
     {
-        $response = Http::withHeaders([
+        $response = Http::timeout(120)->withHeaders([
             'Authorization' => 'Bearer ' . $this->apiKey,
         ])->attach(
             'file', file_get_contents($filePath), basename($filePath)
