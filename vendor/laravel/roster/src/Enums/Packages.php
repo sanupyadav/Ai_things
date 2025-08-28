@@ -9,6 +9,7 @@ enum Packages: string
     case WAYFINDER = 'wayfinder';
 
     // BACKEND
+    case BREEZE = 'breeze';
     case FILAMENT = 'filament';
     case FOLIO = 'folio';
     case FLUXUI_FREE = 'flux_free';
@@ -27,6 +28,7 @@ enum Packages: string
     case PROMPTS = 'prompts';
     case RECTOR = 'rector';
     case REVERB = 'reverb';
+    case SAIL = 'sail';
     case SCOUT = 'scout';
     case STATAMIC = 'statamic';
     case VOLT = 'volt';
@@ -36,9 +38,11 @@ enum Packages: string
     // NPM
     case ALPINEJS = 'alpinejs';
     case ECHO = 'laravel-echo';
+    case ESLINT = 'eslint';
     case INERTIA_REACT = 'inertia-react';
     case INERTIA_SVELTE = 'inertia-svelte';
     case INERTIA_VUE = 'inertia-vue';
+    case PRETTIER = 'prettier';
     case REACT = 'react';
     case TAILWINDCSS = 'tailwindcss';
     case VUE = 'vue';
