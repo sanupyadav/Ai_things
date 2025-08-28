@@ -68,7 +68,7 @@ return [
 
         'a4f_whisper' => [
             'label' => 'provider-3/whisper-1',
-            'api_key' => env('A4F_API_KEY', 'ddc-a4f-d5d100db188f414fbf505a57f8b22b00'),
+            'api_key' => env('A4F_API_KEY'),
             'api_url' => 'https://api.a4f.co/v1',
             'model' => 'provider-3/whisper-1',
             'driver' => \LarAgent\Drivers\OpenAi\OpenAiCompatible::class,
