@@ -28,7 +28,7 @@ class AudioController extends Controller
         ]);
 
         $filePath = $request->file('audio')->getRealPath();
-        $text = $this->audioService->transcribe($filePath);
+        $text = $this->audioService->transcribeAudio($filePath);
 
         if (!$text) {
             return response()->json([

@@ -1,7 +1,7 @@
 <x-app-layout>
  <x-slot name="header">
      <h2 class="font-semibold text-x dark:text-gray-200 leading-tight">
-         {{ __('Audio to Text Converter') }}
+         {{ __('AI transcribe') }}
      </h2>
  </x-slot>
 
