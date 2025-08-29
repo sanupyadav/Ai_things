@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\AudioController;
+use App\Http\Controllers\TranscriptionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,7 +26,8 @@ Route::middleware([
 
     Route::get('audio-processor', [AudioController::class, 'index'])->name('audio.processor');
 
+    Route::get('/transcribe', [TranscriptionController::class, 'index'])->name('audio.aws');
 
-Route::post('/speech-to-text', [AudioController::class, 'transcribe'])->name('speech.to.text');
+    Route::post('/speech-to-text', [AudioController::class, 'transcribe'])->name('speech.to.text');
 
 });
