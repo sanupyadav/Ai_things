@@ -1,5 +1,5 @@
 <?php
-[
+return [
     'jobName' => 'transcribe_1756453126',
     'accountId' => '019875372755',
     'status' => 'COMPLETED',

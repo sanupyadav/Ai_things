@@ -30,4 +30,22 @@ Route::middleware([
 
     Route::post('/speech-to-text', [AudioController::class, 'transcribe'])->name('speech.to.text');
 
+
+
+    Route::get('/review', function () {
+    $data = [
+        "customerSentiment" => "neutral",
+        "guidelineAdherence" => "good",
+        "issueResolution" => "partially_resolved",
+        "communicationClarity" => "poor",
+        "empathyLevel" => "low",
+        "rating" => 7.5,
+        "overallSummary" => "The customer service representative was able to resolve the issue partially but was unable to provide a clear explanation of the solution...",
+        "keyCustomerImprovements" => [
+            "Provide clear explanations for solutions",
+            "Show empathy and understanding in conversations"
+        ],
+    ];
+    return view('review', compact('data'));
+});
 });

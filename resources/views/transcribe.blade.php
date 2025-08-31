@@ -5,7 +5,6 @@
      </h2>
  </x-slot>
 
-
  <head>
      <meta charset="UTF-8" />
      <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -13,7 +12,6 @@
      <title>Audio to Text</title>
      <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
  </head>
-
 
  <body class="bg-gray-800 min-h-screen flex items-center justify-center p-4">
      <div class="flex flex-col gap-4 max-w-xl w-full bg-gray-700 rounded-xl shadow-lg p-4" style="margin: auto; margin-top: 80px;">
@@ -31,7 +29,6 @@
              </div>
          </div>
 
-
          <!-- Processing indicator -->
          <div id="processingIndicator" class="hidden flex justify-center items-center py-3">
              <div class="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm">
@@ -40,62 +37,72 @@
              </div>
          </div>
 
-
          <!-- Audio File Upload Area -->
-        <div id="fileUploadArea" class="p-2 bg-gray-700 rounded-md border border-gray-600 hover:border-gray-500 transition-colors duration-200 w-full max-w-md mx-auto">
-   <input type="file" id="fileInput" class="hidden" accept=".mp3,.wav,.ogg,.flac,.m4a,.aac">
+         <div id="fileUploadArea" class="p-2 bg-gray-700 rounded-md border border-gray-600 hover:border-gray-500 transition-colors duration-200 w-full max-w-md mx-auto">
+            <input type="file" id="fileInput" class="hidden" accept=".mp3,.wav,.ogg,.flac,.m4a,.aac">
 
+            <!-- Default upload state -->
+            <div id="uploadDefault" class="text-center cursor-pointer">
+                <svg class="mx-auto h-6 w-6 text-gray-400 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg>
+                <p class="text-gray-200 text-sm mb-0.5">Drop your audio file or click</p>
+                <p class="text-gray-400 text-xs">Max size: 50MB</p>
+            </div>
 
-   <!-- Default upload state -->
-   <div id="uploadDefault" class="text-center cursor-pointer">
-       <svg class="mx-auto h-6 w-6 text-gray-400 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-       </svg>
-       <p class="text-gray-200 text-sm mb-0.5">Drop your audio file or click</p>
-       <p class="text-gray-400 text-xs">Max size: 50MB</p>
-   </div>
+            <!-- File selected state -->
+            <div id="fileSelected" class="hidden">
+                <div class="flex items-center justify-between p-2 bg-gray-600 rounded-md text-sm">
+                    <div class="flex items-center gap-2">
+                        <div class="p-1 bg-blue-600 rounded">
+                            <svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-1v13M9 19c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm12-1c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-gray-200 font-medium text-sm" id="fileName"></p>
+                            <p class="text-gray-400 text-xs" id="fileSize"></p>
+                        </div>
+                    </div>
+                    <button id="removeFile" class="text-red-400 hover:text-red-300 p-1 rounded hover:bg-gray-600 transition-colors duration-200">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
 
+         <!-- Radio + Action Buttons -->
+         <div class="flex flex-col gap-3 justify-center text-sm items-center">
+             <!-- Radio Buttons -->
+             <div class="flex gap-4 items-center text-gray-300">
+                <label class="flex items-center gap-1 cursor-pointer">
+                     <input type="radio" name="transcribeOption" value="LOCAL" checked class="text-blue-500 focus:ring-blue-500">
+                     <span>Local</span>
+                 </label>
+                 <label class="flex items-center gap-1 cursor-pointer">
+                     <input type="radio" name="transcribeOption" value="AWS" class="text-blue-500 focus:ring-blue-500">
+                     <span>AWS</span>
+                 </label>
+             </div>
 
-   <!-- File selected state -->
-   <div id="fileSelected" class="hidden">
-       <div class="flex items-center justify-between p-2 bg-gray-600 rounded-md text-sm">
-           <div class="flex items-center gap-2">
-               <div class="p-1 bg-blue-600 rounded">
-                   <svg class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-1v13M9 19c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2zm12-1c0 1.105-.895 2-2 2s-2-.895-2-2 .895-2 2-2 2 .895 2 2z"></path>
-                   </svg>
-               </div>
-               <div>
-                   <p class="text-gray-200 font-medium text-sm" id="fileName"></p>
-                   <p class="text-gray-400 text-xs" id="fileSize"></p>
-               </div>
-           </div>
-           <button id="removeFile" class="text-red-400 hover:text-red-300 p-1 rounded hover:bg-gray-600 transition-colors duration-200">
-               <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-               </svg>
-           </button>
-       </div>
-   </div>
-</div>
-
-
-         <!-- Action Buttons -->
-         <div class="flex gap-2 justify-center text-sm">
-             <button type="button" id="uploadBtn" class="bg-gray-600 text-gray-300 px-4 py-2 rounded-lg hover:bg-gray-500 flex items-center gap-1">
-                 Select Audio
-             </button>
-             <button type="button" id="processBtn" class="hidden bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-1">
-                 Convert
-             </button>
-             <button type="button" id="clearBtn" class="hidden bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
-                 Clear
-             </button>
+             <!-- Buttons -->
+             <div class="flex gap-2">
+                 <button type="button" id="uploadBtn" class="bg-gray-600 text-gray-300 px-4 py-2 rounded-lg hover:bg-gray-500 flex items-center gap-1">
+                     Select Audio
+                 </button>
+                 <button type="button" id="processBtn" class="hidden bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-1">
+                     Convert
+                 </button>
+                 <button type="button" id="clearBtn" class="hidden bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+                     Clear
+                 </button>
+             </div>
          </div>
      </div>
 
-
-     <!-- JS remains the same -->
+     <!-- JS -->
      <script>
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
             const resultWindow = document.getElementById("resultWindow");
@@ -135,39 +142,99 @@
             removeFile.addEventListener('click', clearFileSelection);
             function clearFileSelection(){ selectedFile=null; fileInput.value=''; uploadDefault.classList.remove('hidden'); fileSelected.classList.add('hidden'); processBtn.classList.add('hidden'); clearBtn.classList.add('hidden'); }
 
-            processBtn.addEventListener('click', async ()=>{
-                if(!selectedFile) return;
-                processBtn.disabled = clearBtn.disabled = uploadBtn.disabled = true;
-                processingIndicator.classList.remove('hidden');
-                placeholderText.style.display = 'none';
-                try{
-                    const formData = new FormData();
-                    formData.append('audio', selectedFile);
-                    const response = await fetch('/api/transcribe', { method:'POST', headers:{'X-CSRF-TOKEN':csrfToken}, body: formData });
-                    const data = await response.json();
-                    if(data.status === 'success') displayResult(data.text);
-                    else showError(data.message || 'Failed to process audio file');
-                } catch(e){ showError('Network error. Please try again.'); }
-                finally{ processBtn.disabled = clearBtn.disabled = uploadBtn.disabled = false; processingIndicator.classList.add('hidden'); }
-            });
+            processBtn.addEventListener('click', async () => {
+    if (!selectedFile) return;
 
-            function displayResult(text){
-                resultWindow.innerHTML = `
-                    <div class="bg-green-50 border border-green-200 rounded-lg p-3 mb-2 flex items-center gap-1">
-                        <svg class="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span class="text-green-800 font-medium">Transcription Complete</span>
-                    </div>
-                    <div class="bg-gray-800 border border-gray-600 rounded-lg p-3">
-                        <div class="flex justify-between items-center mb-1">
-                            <h3 class="text-gray-200 font-medium text-sm">Transcribed Text:</h3>
-                            <button onclick="copyToClipboard()" class="text-blue-400 hover:text-blue-300 text-xs flex items-center gap-1">Copy</button>
-                        </div>
-                        <div class="text-gray-100 leading-relaxed whitespace-pre-wrap text-sm" id="transcribedText">${text}</div>
-                    </div>
-                `;
-            }
+    const selectedOption = document.querySelector('input[name="transcribeOption"]:checked').value;
+    const apiUrl = '/api/transcribe';
+
+    processBtn.disabled = clearBtn.disabled = uploadBtn.disabled = true;
+    processingIndicator.classList.remove('hidden');
+    placeholderText.style.display = 'none';
+
+    try {
+        const formData = new FormData();
+        formData.append('audio', selectedFile);
+        formData.append('option', selectedOption);
+
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': csrfToken },
+            body: formData
+        });
+
+        const result = await response.json();
+        console.log(result);
+
+        if (result.status === "success" && result.data) {
+            // show only "data" part
+            displayResult(`<pre class="text-gray-100 text-sm whitespace-pre-wrap">${JSON.stringify(result.data, null, 2)}</pre>`);
+        } else {
+            showError("Failed to process the response");
+        }
+
+    } catch (error) {
+        console.error("Error:", error);
+        showError("Something went wrong while processing");
+    } finally {
+        processBtn.disabled = clearBtn.disabled = uploadBtn.disabled = false;
+        processingIndicator.classList.add('hidden');
+    }
+});
+
+function displayResult(data){
+    resultWindow.innerHTML = `
+        <div class="bg-green-50 border border-green-200 rounded-lg p-3 mb-2 flex items-center gap-1">
+            <svg class="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-green-800 font-medium">Analysis Complete</span>
+        </div>
+        
+        <div class="bg-gray-800 border border-gray-600 rounded-lg p-4 space-y-3">
+            <h3 class="text-gray-200 font-semibold text-base mb-2">Conversation Analysis</h3>
+
+            <div class="grid grid-cols-2 gap-2 text-sm">
+                <p><span class="text-gray-400">Customer Sentiment:</span> <span class="text-gray-100 font-medium">${data.customerSentiment}</span></p>
+                <p><span class="text-gray-400">Guideline Adherence:</span> <span class="text-gray-100 font-medium">${data.guidelineAdherence}</span></p>
+                <p><span class="text-gray-400">Issue Resolution:</span> <span class="text-gray-100 font-medium">${data.issueResolution}</span></p>
+                <p><span class="text-gray-400">Communication Clarity:</span> <span class="text-gray-100 font-medium">${data.communicationClarity}</span></p>
+                <p><span class="text-gray-400">Empathy Level:</span> <span class="text-gray-100 font-medium">${data.empathyLevel}</span></p>
+                <p><span class="text-gray-400">Rating:</span> <span class="text-yellow-400 font-bold">${data.rating} ⭐</span></p>
+            </div>
+
+            ${data.strengths?.length ? `
+            <div>
+                <h4 class="text-green-400 font-medium text-sm mb-1">Strengths:</h4>
+                <ul class="list-disc list-inside text-gray-100 text-sm">
+                    ${data.strengths.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+            </div>` : ''}
+
+            ${data.weaknesses?.length ? `
+            <div>
+                <h4 class="text-red-400 font-medium text-sm mb-1">Weaknesses:</h4>
+                <ul class="list-disc list-inside text-gray-100 text-sm">
+                    ${data.weaknesses.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+            </div>` : ''}
+
+            ${data.suggestions?.length ? `
+            <div>
+                <h4 class="text-blue-400 font-medium text-sm mb-1">Suggestions:</h4>
+                <ul class="list-disc list-inside text-gray-100 text-sm">
+                    ${data.suggestions.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+            </div>` : ''}
+
+            <div>
+                <h4 class="text-gray-300 font-medium text-sm mb-1">Overall Summary:</h4>
+                <p class="text-gray-200 text-sm leading-relaxed">${data.overallSummary}</p>
+            </div>
+        </div>
+    `;
+}
+
 
             function copyToClipboard(){ 
                 const text = document.getElementById('transcribedText').textContent;
@@ -187,10 +254,3 @@
         </script>
  </body>
 </x-app-layout>
-
-
-
-
-
-
-
