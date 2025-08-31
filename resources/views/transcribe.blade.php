@@ -164,17 +164,17 @@
         });
 
         const result = await response.json();
-        console.log(result);
+        //console.log(result.data);
 
         if (result.status === "success" && result.data) {
             // show only "data" part
-            displayResult(`<pre class="text-gray-100 text-sm whitespace-pre-wrap">${JSON.stringify(result.data, null, 2)}</pre>`);
+            displayResult(result);
         } else {
             showError("Failed to process the response");
         }
 
     } catch (error) {
-        console.error("Error:", error);
+        //console.error("Error:", error);
         showError("Something went wrong while processing");
     } finally {
         processBtn.disabled = clearBtn.disabled = uploadBtn.disabled = false;
@@ -182,54 +182,59 @@
     }
 });
 
-function displayResult(data){
-    resultWindow.innerHTML = `
-        <div class="bg-green-50 border border-green-200 rounded-lg p-3 mb-2 flex items-center gap-1">
-            <svg class="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+function displayResult(response) {
+    if (!response) return;
+
+    // Use the "data" part inside the response
+    const data = response.data || {};
+
+    // Handle arrays safely
+    const strengths = data.strengths?.length ? data.strengths.map(s => `<li>${s}</li>`).join('') : '<li>None</li>';
+    const weaknesses = data.weaknesses?.length ? data.weaknesses.map(s => `<li>${s}</li>`).join('') : '<li>None</li>';
+    const suggestions = data.suggestions?.length ? data.suggestions.map(s => `<li>${s}</li>`).join('') : '<li>None</li>';
+
+    document.getElementById("resultWindow").innerHTML = `
+        <div class="bg-green-50 border border-green-200 rounded-lg p-3 mb-3 flex items-center gap-2">
+            <svg class="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
             <span class="text-green-800 font-medium">Analysis Complete</span>
         </div>
-        
-        <div class="bg-gray-800 border border-gray-600 rounded-lg p-4 space-y-3">
-            <h3 class="text-gray-200 font-semibold text-base mb-2">Conversation Analysis</h3>
 
-            <div class="grid grid-cols-2 gap-2 text-sm">
-                <p><span class="text-gray-400">Customer Sentiment:</span> <span class="text-gray-100 font-medium">${data.customerSentiment}</span></p>
-                <p><span class="text-gray-400">Guideline Adherence:</span> <span class="text-gray-100 font-medium">${data.guidelineAdherence}</span></p>
-                <p><span class="text-gray-400">Issue Resolution:</span> <span class="text-gray-100 font-medium">${data.issueResolution}</span></p>
-                <p><span class="text-gray-400">Communication Clarity:</span> <span class="text-gray-100 font-medium">${data.communicationClarity}</span></p>
-                <p><span class="text-gray-400">Empathy Level:</span> <span class="text-gray-100 font-medium">${data.empathyLevel}</span></p>
-                <p><span class="text-gray-400">Rating:</span> <span class="text-yellow-400 font-bold">${data.rating} ⭐</span></p>
+        <div class="bg-gray-800 border border-gray-600 rounded-lg p-4 space-y-3 text-sm text-gray-200">
+            <h3 class="font-semibold text-base mb-2">Conversation Analysis</h3>
+            <div class="grid grid-cols-2 gap-2">
+                <p><span class="text-gray-400">Customer Sentiment:</span> <span class="font-medium">${data.customerSentiment || 'N/A'}</span></p>
+                <p><span class="text-gray-400">Guideline Adherence:</span> <span class="font-medium">${data.guidelineAdherence || 'N/A'}</span></p>
+                <p><span class="text-gray-400">Issue Resolution:</span> <span class="font-medium">${data.issueResolution || 'N/A'}</span></p>
+                <p><span class="text-gray-400">Communication Clarity:</span> <span class="font-medium">${data.communicationClarity || 'N/A'}</span></p>
+                <p><span class="text-gray-400">Empathy Level:</span> <span class="font-medium">${data.empathyLevel || 'N/A'}</span></p>
+                <p><span class="text-gray-400">Rating:</span> <span class="text-yellow-400 font-bold">${data.rating || 'N/A'} ⭐</span></p>
             </div>
 
-            ${data.strengths?.length ? `
             <div>
-                <h4 class="text-green-400 font-medium text-sm mb-1">Strengths:</h4>
-                <ul class="list-disc list-inside text-gray-100 text-sm">
-                    ${data.strengths.map(item => `<li>${item}</li>`).join('')}
-                </ul>
-            </div>` : ''}
-
-            ${data.weaknesses?.length ? `
-            <div>
-                <h4 class="text-red-400 font-medium text-sm mb-1">Weaknesses:</h4>
-                <ul class="list-disc list-inside text-gray-100 text-sm">
-                    ${data.weaknesses.map(item => `<li>${item}</li>`).join('')}
-                </ul>
-            </div>` : ''}
-
-            ${data.suggestions?.length ? `
-            <div>
-                <h4 class="text-blue-400 font-medium text-sm mb-1">Suggestions:</h4>
-                <ul class="list-disc list-inside text-gray-100 text-sm">
-                    ${data.suggestions.map(item => `<li>${item}</li>`).join('')}
-                </ul>
-            </div>` : ''}
+                <h4 class="text-green-400 font-medium mb-1">Strengths:</h4>
+                <ul class="list-disc list-inside">${strengths}</ul>
+            </div>
 
             <div>
-                <h4 class="text-gray-300 font-medium text-sm mb-1">Overall Summary:</h4>
-                <p class="text-gray-200 text-sm leading-relaxed">${data.overallSummary}</p>
+                <h4 class="text-red-400 font-medium mb-1">Weaknesses:</h4>
+                <ul class="list-disc list-inside">${weaknesses}</ul>
+            </div>
+
+            <div>
+                <h4 class="text-blue-400 font-medium mb-1">Suggestions:</h4>
+                <ul class="list-disc list-inside">${suggestions}</ul>
+            </div>
+
+            <div>
+                <h4 class="text-gray-300 font-medium mb-1">Overall Summary:</h4>
+                <p class="leading-relaxed">${data.overallSummary || 'N/A'}</p>
+            </div>
+
+            <div>
+                <h4 class="text-gray-300 font-medium mb-1">Transcripts:</h4>
+                <p class="leading-relaxed">${data.transcripts || response.transcripts || 'N/A'}</p>
             </div>
         </div>
     `;
