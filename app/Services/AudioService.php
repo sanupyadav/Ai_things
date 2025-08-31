@@ -30,8 +30,13 @@ class AudioService
 
      public function uploadToS3($file)
     {
-        $path = Storage::disk('s3')->putFile('calls', $file);
-        return Storage::disk('s3')->url($path); // public URL
+         $filename = 'calls/' . $file->getClientOriginalName();
+        if (Storage::disk('s3')->exists($filename)) {
+            return Storage::disk('s3')->url($filename);
+        }
+
+        $path = Storage::disk('s3')->putFileAs('calls', $file, $file->getClientOriginalName());
+        return Storage::disk('s3')->url($path);
     }
 
      // Start Transcription Job

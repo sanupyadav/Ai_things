@@ -24,7 +24,7 @@ return [
         'App\\Agents\\',
     ],
 
-    'default_provider' => 'openrouter', // or whatever your default is
+    'default_provider' => 'ollama', // or whatever your default is
 
     /**
      * Always keep provider named 'default'
@@ -47,7 +47,7 @@ return [
         // ],
 
         'ollama' => [
-            'label' => 'ollama-local',
+            'label' => 'ollama-local',  //llama3.2:3b 
             'driver' => \LarAgent\Drivers\OpenAi\OpenAiCompatible::class,
             'api_key' => 'ollama', // Can be any string for Ollama
             'api_url' => 'http://localhost:11434/v1',
@@ -60,7 +60,17 @@ return [
             'label' => 'GitHub-AI',
             'api_key' => env('GITHUB_TOKEN'),
             'api_url' => 'https://models.github.ai/inference',
-            'driver' => \LarAgent\Drivers\OpenAi\OpenAiCompatible::class, // It’s OpenAI-compatible
+            'driver' => \LarAgent\Drivers\OpenAi\OpenAiCompatible::class, // It’s OpenAI-compatiblexai/grok-3
+            'default_context_window' => 4096,
+            'default_max_completion_tokens' => 1000,
+            'default_temperature' => 1,
+        ],
+
+        'mistriyal' => [
+            'label' => 'GitHub-AI',
+            'api_key' => env('MISTRIYAL_TOKEN_GPT5'),
+            'api_url' => 'https://models.github.ai/inference',
+            'driver' => \LarAgent\Drivers\OpenAi\OpenAiCompatible::class, // mistral-ai/Mistral-Large-2411
             'default_context_window' => 4096,
             'default_max_completion_tokens' => 1000,
             'default_temperature' => 1,
@@ -77,6 +87,17 @@ return [
             'default_temperature' => 0.7,
         ],
 
+         'a4f_chat' => [
+            'label' => 'provider-1/gpt-oss-120b',
+            'api_key' => env('A4F_API_KEY'),
+            'api_url' => 'https://api.a4f.co/v1',
+            'model' => 'provider-1/gpt-oss-120b',
+            'driver' => \LarAgent\Drivers\OpenAi\OpenAiCompatible::class,
+            'default_context_window' => 4096,
+            'default_max_completion_tokens' => 1000,
+            'default_temperature' => 0.7,
+        ],
+
         // openai/gpt-oss-20b:free
         'openrouter' => [
             'label' => 'openrouter',
@@ -84,7 +105,17 @@ return [
             'api_key' => env('OPENROUTER_API_KEY'),
             'api_url' => 'https://openrouter.ai/api/v1',
             'default_context_window' => 50000,
-            'default_max_completion_tokens' => 100,
+            'default_max_completion_tokens' => 500,
+            'default_temperature' => 1,
+        ],
+
+        'huggingface' => [
+            'label' => 'Hugging Face',
+            'api_key' => env('HUGGINGFACE_API_KEY'),
+            'api_url' => 'https://router.huggingface.co/v1',
+            'driver' => \LarAgent\Drivers\OpenAi\OpenAiCompatible::class, // OpenAI-compatible
+            'default_context_window' => 2048,
+            'default_max_completion_tokens' => 500,
             'default_temperature' => 1,
         ],
 
@@ -98,5 +129,5 @@ return [
         ],
     ],
 
-    'fallback_provider' => 'openrouter',
+   'fallback_provider' => 'ollama',
 ];
