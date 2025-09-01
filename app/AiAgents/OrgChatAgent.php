@@ -2,9 +2,9 @@
 
 namespace App\AiAgents;
 
-use App\Models\Transaction;
-use App\Models\User;
 use LarAgent\Agent;
+use App\Models\User;
+use App\Models\Transaction;
 use LarAgent\Attributes\Tool;
 
 class OrgChatAgent extends Agent
@@ -13,7 +13,7 @@ class OrgChatAgent extends Agent
 
     protected $history = 'session';
 
-    protected $provider = 'gpt4';
+    protected $provider = 'meta';
 
     protected $tools = [];
 

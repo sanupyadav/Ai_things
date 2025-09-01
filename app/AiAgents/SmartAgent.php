@@ -10,7 +10,7 @@ class SmartAgent extends Agent
 
     protected $history = 'session';
 
-    protected $provider = 'gpt4';
+    protected $provider = 'meta';
 
     protected $tools = [];
 
