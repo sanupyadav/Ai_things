@@ -56,6 +56,16 @@ return [
             'default_temperature' => 0.7,
         ],
 
+         'meta' => [
+            'label' => 'GitHub-AI',
+            'api_key' => env('META'),
+            'api_url' => 'https://models.github.ai/inference',
+            'driver' => \LarAgent\Drivers\OpenAi\OpenAiCompatible::class, // It’s OpenAI-compatiblexai/grok-3
+            'default_context_window' => 4096,
+            'default_max_completion_tokens' => 1000,
+            'default_temperature' => 1,
+        ],
+
         'gpt4' => [
             'label' => 'GitHub-AI',
             'api_key' => env('GITHUB_TOKEN'),
@@ -76,22 +86,21 @@ return [
             'default_temperature' => 1,
         ],
 
-        'a4f_whisper' => [
-            'label' => 'provider-3/whisper-1',
-            'api_key' => env('A4F_API_KEY'),
-            'api_url' => 'https://api.a4f.co/v1',
-            'model' => 'provider-3/whisper-1',
-            'driver' => \LarAgent\Drivers\OpenAi\OpenAiCompatible::class,
-            'default_context_window' => 4096,
-            'default_max_completion_tokens' => 1000,
-            'default_temperature' => 0.7,
-        ],
+        // 'a4f_whisper' => [
+        //     'label' => 'provider-3/whisper-1',
+        //     'api_key' => env('A4F_API_KEY'),
+        //     'api_url' => 'https://api.a4f.co/v1',
+        //     'model' => 'provider-3/whisper-1',
+        //     'driver' => \LarAgent\Drivers\OpenAi\OpenAiCompatible::class,
+        //     'default_context_window' => 4096,
+        //     'default_max_completion_tokens' => 1000,
+        //     'default_temperature' => 0.7,
+        // ],
 
          'a4f_chat' => [
             'label' => 'provider-1/gpt-oss-120b',
             'api_key' => env('A4F_API_KEY'),
             'api_url' => 'https://api.a4f.co/v1',
-            'model' => 'provider-1/gpt-oss-120b',
             'driver' => \LarAgent\Drivers\OpenAi\OpenAiCompatible::class,
             'default_context_window' => 4096,
             'default_max_completion_tokens' => 1000,
@@ -99,14 +108,15 @@ return [
         ],
 
         // openai/gpt-oss-20b:free
+
         'openrouter' => [
-            'label' => 'openrouter',
-            'driver' => \LarAgent\Drivers\OpenAi\OpenAiCompatible::class,
-            'api_key' => env('OPENROUTER_API_KEY'),
-            'api_url' => 'https://openrouter.ai/api/v1',
-            'default_context_window' => 50000,
-            'default_max_completion_tokens' => 500,
-            'default_temperature' => 1,
+        'label' => 'openrouter-provider',
+        'driver' => \LarAgent\Drivers\OpenAi\OpenAiCompatible::class,
+        'api_key' => env('OPENROUTER_API_KEY'),
+        'api_url' => "https://openrouter.ai/api/v1",
+        'default_context_window' => 50000,
+        'default_max_completion_tokens' => 100,
+        'default_temperature' => 1,
         ],
 
         'huggingface' => [
@@ -129,5 +139,5 @@ return [
         ],
     ],
 
-   'fallback_provider' => 'ollama',
+   'fallback_provider' => 'openrouter',
 ];
