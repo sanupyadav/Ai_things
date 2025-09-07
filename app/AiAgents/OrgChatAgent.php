@@ -9,17 +9,17 @@ use LarAgent\Attributes\Tool;
 
 class OrgChatAgent extends Agent
 {
-    // protected $model = 'meta/Meta-Llama-3.1-405B-Instruct';
-
-    // protected $history = 'session';
-
-    // protected $provider = 'meta';
-
-     protected $model = 'qwen2.5:7b';   //'llama2-uncensored:latest';
+    protected $model = 'meta/Meta-Llama-3.1-405B-Instruct';
 
     protected $history = 'session';
 
-    protected $provider = 'ollama';
+    protected $provider = 'meta';
+
+    //  protected $model = 'qwen2.5:7b';   //'llama2-uncensored:latest';
+
+    // protected $history = 'session';
+
+    // protected $provider = 'ollama';
 
     protected $tools = [];
 
@@ -37,92 +37,12 @@ class OrgChatAgent extends Agent
 
     }
 
-    // #[Tool('Retrieve user information and profile data by user ID', ['id' => 'user id'])]
-    // public function getUserData(int $id): array
-    // {
-    //     if (! $this->isUserId($id)) {
-    //         return ['error' => 'Invalid user ID format. User ID must be numeric.'];
-    //     }
-
-    //     $user = User::where('id', $id)->select('name', 'email')->first();
-    //     if ($user) {
-    //         $attributes = $user->getAttributes();
-
-    //         // $attributes will be an array containing 'name' and 'email'
-    //         return $attributes;
-    //     }
-
-    // }
 
     public function isUserId(string $input): bool
     {
         return is_numeric(trim($input));
     }
 
-    // #[Tool('Get transaction details and history by transaction ID', ['transaction_id' => 'transaction id'])]
-    // public function getDataByTransactionId(string $transactionId): array
-    // {
-    //     if (! $this->isTransactionId($transactionId)) {
-    //         return [
-    //             'success' => false,
-    //             'error' => 'Invalid transaction ID format. Transaction ID must start with capital TX followed by hyphen and numbers (e.g., TX00000001).',
-    //         ];
-    //     }
-
-    //     $transaction = Transaction::where('transaction_id', $transactionId)
-    //         ->select('transaction_id', 'amount', 'type', 'description', 'created_at')
-    //         ->first();
-
-    //     if (! $transaction) {
-    //         return [
-    //             'success' => false,
-    //             'error' => 'Transaction not found.',
-    //         ];
-    //     }
-
-    //     return [
-    //         'success' => true,
-    //         'transaction' => $transaction->toArray(),
-    //     ];
-    // }
-
-    // public function isTransactionId(?string $input): bool
-    // {
-    //     if (! $input) {
-    //         return false;
-    //     } // Reject null or empty strings
-
-    //     return preg_match('/^TX\d{8,}$/', trim($input)) === 1;
-
-    // }
-
-    // #[Tool('Get all transaction details of a user', ['id' => ' it should be user id'])]
-    // public function getAllTransactionData(string $id): array
-    // {
-    //     $user = User::find($id);
-    //     if (! $user) {
-    //         return [
-    //             'success' => false,
-    //             'error' => 'User not found.',
-    //         ];
-    //     }
-
-    //     $transactions = Transaction::where('user_id', $id)
-    //         ->select('transaction_id', 'amount', 'type', 'description', 'created_at')
-    //         ->get();
-
-    //     if (! $transactions) {
-    //         return [
-    //             'success' => false,
-    //             'error' => 'No transactions found.',
-    //         ];
-    //     }
-
-    //     return [
-    //         'success' => true,
-    //         'transactions' => $transactions->toArray(),
-    //     ];
-    // }
 
     #[Tool('Get any data from DB safely', ['query' => 'user ask question', '$currentUserId' => 'login users id'])]
     public function getAnyDataFromDB(string $query, int $currentUserId)
@@ -133,4 +53,30 @@ class OrgChatAgent extends Agent
         return $service->handleQuery($query, $currentUserId);
 
     }
+
+
+    #[Tool('Get complete Pay1 company profile with structured data', [
+    'query' => 'user question about Pay1'
+])]
+public function getPay1Info(string $query = ''): array
+{
+    return [
+        'overview' => 'Pay1 (MindsArray Network Pvt. Ltd.) is a Mumbai-based retail-tech platform founded around 2012. It empowers local shopkeepers by offering financial, digital, and business services.',
+        'founders' => 'Founders: Alakh Gargiya (CEO), Ashish Arya (CTO), Chirutha Dalal (COO), Vinit Khanvilkar (CBO), Abhinav Mathur (CFO).',
+        'funding' => 'Mostly bootstrapped. No major funding publicly disclosed.',
+        'services' => 'Bill payments, mobile/DTH recharges, AePS banking, UPI/QR payments, insurance, travel booking, ledger tools.',
+        'market' => '400,000+ retailers, 30M customers, 2,300+ cities. Strong rural focus.',
+        'news' => '2024: Pay1 rebranded to umbrella brand "Dhanak" with verticals Pay1, Device Hub, Mera Fayda, Refurb.',
+        'awards' => 'SiliconIndia "Company of the Year 2019". Recognized for women leadership (40% top roles).',
+        'links' => [
+            'official' => 'https://www.pay1.in/',
+            'yourstory' => 'https://yourstory.com/companies/pay1',
+            'siliconindia' => 'https://www.siliconindia.com/magazine_articles/pay1-dukandaron-ka-network-REXK424018824.html',
+            'finextra' => 'https://www.finextra.com/pressarticle/98538/pay1-rebrands-as-dhanak',
+            'crunchbase' => 'https://www.crunchbase.com/organization/pay1',
+        ]
+    ];
+}
+
+
 }
