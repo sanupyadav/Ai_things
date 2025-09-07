@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\AudioService;
 use App\AiAgents\TranslationAgent;
 use App\Http\Controllers\Controller;
+use App\AiAgents\EnhancedTranslation;
 
 class TranscriptionController extends Controller
 {
@@ -36,12 +37,15 @@ class TranscriptionController extends Controller
             $result = $this->audioService->transcribe($request->file('audio'));
         } else {
             $result = include resource_path('data/aws-hi.php');
-
+        }
             $localData = [];
 
+           
             // Access directly inside "results.transcripts"
             if (isset($result['results']['transcripts'])) {
-                $localData['transcripts'] = $result['results']['transcripts'][0]['transcript'] ?? [];
+
+                $data = EnhancedTranslation::for('enhanced-translation')->respond($result['results']['transcripts'][0]['transcript']);
+                $localData['transcripts'] = $data?? [];
             }
             
             if ($result['results']['audio_segments']) {
@@ -63,7 +67,7 @@ class TranscriptionController extends Controller
                 'data' => $response,
                 'transcripts' => $localData['transcripts'],
             ];
+            return response()->json($result);
         }
-        return response()->json($result);
-        }
+        
 }

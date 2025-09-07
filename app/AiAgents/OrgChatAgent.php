@@ -9,11 +9,17 @@ use LarAgent\Attributes\Tool;
 
 class OrgChatAgent extends Agent
 {
-    protected $model = 'meta/Meta-Llama-3.1-405B-Instruct';
+    // protected $model = 'meta/Meta-Llama-3.1-405B-Instruct';
+
+    // protected $history = 'session';
+
+    // protected $provider = 'meta';
+
+     protected $model = 'qwen2.5:7b';   //'llama2-uncensored:latest';
 
     protected $history = 'session';
 
-    protected $provider = 'meta';
+    protected $provider = 'ollama';
 
     protected $tools = [];
 

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\AudioController;
+use App\Http\Controllers\VisionAgentController;
 use App\Http\Controllers\TranscriptionController;
 
 Route::get('/', function () {
@@ -32,20 +33,5 @@ Route::middleware([
 
 
 
-    Route::get('/review', function () {
-    $data = [
-        "customerSentiment" => "neutral",
-        "guidelineAdherence" => "good",
-        "issueResolution" => "partially_resolved",
-        "communicationClarity" => "poor",
-        "empathyLevel" => "low",
-        "rating" => 7.5,
-        "overallSummary" => "The customer service representative was able to resolve the issue partially but was unable to provide a clear explanation of the solution...",
-        "keyCustomerImprovements" => [
-            "Provide clear explanations for solutions",
-            "Show empathy and understanding in conversations"
-        ],
-    ];
-    return view('review', compact('data'));
-});
+Route::get('/vision-agent', [VisionAgentController::class, 'index'])->name('vision');
 });
