@@ -6,9 +6,9 @@ use LarAgent\Agent;
 
 class TranslationAgent extends Agent
 {
-    // protected $model = 'llama3.2:3b';
+    // protected $model = 'qwen2.5:1.5b';
 
-    // protected $history = 'in_memory';openai/gpt-oss-120b
+    // protected $history = 'in_memory';
 
     // protected $provider = 'ollama';
 
